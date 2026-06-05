@@ -2,7 +2,7 @@
 import React, { useEffect, useRef } from 'react';
 import { gsap } from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
-import { HeartPulse, MapPin, ShieldCheck, Activity, Award, Calendar } from 'lucide-react';
+import { HeartPulse, MapPin, ShieldCheck, Activity, Award, Calendar, Phone, MessageSquare } from 'lucide-react';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -21,7 +21,7 @@ export default function Home() {
   const aboutPoint3Ref = useRef(null);
 
   useEffect(() => {
-    // --- 1. HERO & PAGE 2: JAISA PEHLE THA WAISA HI CENTER ZOOM MOTION ---
+    // --- 1. HERO & PAGE 2: CENTER ZOOM MOTION (JAISA PEHLE THA) ---
     gsap.fromTo(mainGroupRef.current, 
       { scale: 0.75, opacity: 0.95 },
       {
@@ -51,40 +51,41 @@ export default function Home() {
     );
 
     // --- 2. PAGE 3: SINGLE DOCTOR SIDE-SHIFT & ABOUT US REVEAL ---
-    // Jab user Page 3 (About Section) me scroll karega, tab ye single doctor smoothly side hoga
     gsap.timeline({
       scrollTrigger: {
         trigger: ".about-section-trigger",
         start: "top top",
         end: "bottom bottom",
         scrub: 1.5,
-        pin: true, // Is page ko thodi der screen par rokega taaki animation smooth dikhe
+        pin: true,
       }
     })
     .to(singleDoctorRef.current, {
-      x: window.innerWidth > 768 ? "-25%" : "-5%", // Smoothly side me shift ho jayega
+      x: window.innerWidth > 768 ? "-25%" : "-5%",
       scale: 0.9,
     })
     .to(singleInstrumentRef.current, {
-      rotate: -15, // Instrument position holding stance me chala jayega
+      rotate: -15,
     }, 0);
 
-    // About Us points 1-1 karke khulna start honge
+    // About Us points fade-in animations
     const points = [aboutPoint1Ref.current, aboutPoint2Ref.current, aboutPoint3Ref.current];
     points.forEach((point) => {
-      gsap.fromTo(point,
-        { opacity: 0, y: 40 },
-        {
-          opacity: 1,
-          y: 0,
-          scrollTrigger: {
-            trigger: point,
-            start: "top 80%",
-            end: "top 50%",
-            scrub: 1,
+      if (point) {
+        gsap.fromTo(point,
+          { opacity: 0, y: 40 },
+          {
+            opacity: 1,
+            y: 0,
+            scrollTrigger: {
+              trigger: point,
+              start: "top 80%",
+              end: "top 50%",
+              scrub: 1,
+            }
           }
-        }
-      );
+        );
+      }
     });
 
   }, []);
@@ -92,7 +93,7 @@ export default function Home() {
   return (
     <div ref={containerRef} className="relative min-h-screen bg-[#e5e7eb] text-gray-900 overflow-x-hidden">
       
-      {/* ================= LAYER A: PAGE 1 & 2 KA SURGEONS GROUP (CENTER ZOOM) ================= */}
+      {/* ================= LAYER A: BACKGROUND SURGEONS GROUP (CENTER ZOOM) ================= */}
       <div className="hero-trigger-zone absolute top-0 left-0 w-full h-[180vh] pointer-events-none z-10">
         <div className="sticky top-0 w-full h-screen flex items-center justify-center overflow-hidden">
           <div ref={mainGroupRef} className="w-[320px] h-[320px] md:w-[550px] md:h-[550px] will-change-transform flex items-center justify-center">
@@ -160,21 +161,25 @@ export default function Home() {
         <div className="flex items-center gap-4 md:gap-6">
           <div className="flex items-center gap-1.5 text-xs md:text-sm font-medium text-gray-700 bg-white/40 backdrop-blur-md px-4 py-2 rounded-full border border-white/20 shadow-sm">
             <MapPin className="w-4 h-4 text-gray-600" />
-            <span>Begusarai, India</span>
+            <span>Begusarai, Bihar</span>
           </div>
           <button className="bg-gray-900 text-white text-xs md:text-sm font-medium px-5 py-2.5 rounded-xl">Menu</button>
         </div>
       </header>
 
-      {/* ================= PAGE 1: ORIGINAL HERO SECTION ================= */}
+      {/* ================= PAGE 1: HERO SECTION ================= */}
       <section className="relative min-h-screen pt-36 px-6 md:px-12 flex flex-col justify-between z-20 max-w-7xl mx-auto">
         <div className="max-w-4xl mt-6 md:mt-12">
-          {/* PURANA HOORAY TEXT RESTORED */}
-          <h1 className="text-5xl md:text-8xl font-light tracking-tight leading-[1.05] text-gray-900 uppercase">
+          {/* SAFE TEXT WITH FIXED MAX-WIDTH TO PREVENT OVERLAP BREAKS */}
+          <h1 className="text-4xl md:text-7xl font-light tracking-tight leading-[1.1] text-gray-900 uppercase max-w-3xl">
             innovative <br />
-            <span className="font-outline font-normal">surgical technology</span> <br />
+            <span className="font-bold tracking-tighter text-transparent bg-clip-text bg-gradient-to-r from-gray-900 via-slate-800 to-gray-700">
+              surgical technology
+            </span> <br />
             for a healthy <br />
-            <span className="font-normal normal-case italic">and confident life</span>
+            <span className="font-normal normal-case italic text-blue-900">
+              and confident life
+            </span>
           </h1>
           <button className="mt-10 bg-gray-900 text-white font-medium px-8 py-4 rounded-full shadow-lg text-sm">
             Book a Consultation
@@ -219,11 +224,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ================= PAGE 3: ABOUT US PAR EK SINGLE DOCTOR BICH ME KHRA HO ================= */}
-      {/* Is section me scroll karne par doctor dheere-dheere left side jayega aur right side text points khulenge */}
+      {/* ================= PAGE 3: ABOUT US (SINGLE DOCTOR INTERACTIVE SHIFT) ================= */}
       <section className="about-section-trigger relative min-h-[180vh] z-30 bg-gray-50 border-t border-gray-300">
         
-        {/* FIXED SINGLE DOCTOR WITH INSTRUMENTS IN THE CENTER INITIALLY */}
+        {/* FIXED SINGLE DOCTOR WITH SURGICAL INSTRUMENTS */}
         <div className="sticky top-0 w-full h-screen flex items-center justify-center pointer-events-none overflow-hidden">
           <div ref={singleDoctorRef} className="w-[300px] h-[300px] md:w-[500px] md:h-[500px] flex items-center justify-center will-change-transform">
             <svg className="w-full h-full drop-shadow-[0_25px_50px_rgba(0,0,0,0.15)]" viewBox="0 0 600 600" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -237,10 +241,9 @@ export default function Home() {
                 <path d="M265 345 C265 385, 335 385, 335 345 Z" fill="#0ea5e9" />
               </g>
 
-              {/* SURGERY INSTRUMENTS IN HAND */}
+              {/* SURGERY INSTRUMENTS */}
               <g ref={singleInstrumentRef} transform="translate(300, 420)">
                 <circle cx="0" cy="0" r="18" fill="#0ea5e9" stroke="#0284c7" strokeWidth="1.5" />
-                {/* Long Surgical Forceps / Knife Clamp Tool */}
                 <path d="M-3 -5 L-20 -130 L-10 -135 L5 -5 Z" fill="url(#scalpelGrad)" stroke="#475569" strokeWidth="1" />
                 <circle cx="-15" cy="-132" r="6" stroke="#64748b" strokeWidth="1.5" fill="none" />
                 <path d="M-20 -130 Q-35 -165 -25 -180" stroke="#cbd5e1" strokeWidth="1.5" fill="none" />
@@ -250,9 +253,9 @@ export default function Home() {
           </div>
         </div>
 
-        {/* OVERLAY CONTENT FOR ABOUT US DETAILS */}
+        {/* OVERLAY CONTENT FOR ABOUT US REVEAL */}
         <div className="relative max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 px-6 md:px-12 -mt-[100vh] pointer-events-none">
-          <div className="hidden lg:block" /> {/* Left Side spacing for shifting doctor */}
+          <div className="hidden lg:block" />
           
           <div className="flex flex-col justify-center space-y-32 py-24 lg:pl-12 pointer-events-auto">
             <div>

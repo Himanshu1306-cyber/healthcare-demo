@@ -12,3 +12,9 @@ html, body {
   -webkit-text-stroke: 1.5px rgba(17, 24, 39, 0.7);
   color: transparent;
 }
+@layer utilities {
+  .font-outline {
+    -webkit-text-stroke: 1px #111827;
+    -webkit-text-fill-color: transparent;
+  }
+}
